@@ -35,6 +35,8 @@
         };
 
         var player;
+        var key;
+        var door;
         var stars;
         var bombs;
         var platforms;
@@ -46,16 +48,19 @@
         var game = new Phaser.Game(config);
 
         function preload() {
-            this.load.image('sky', 'assets/sky.png');
+            this.load.image('background2', 'assets/background2.png');
             this.load.image('ground', 'assets/platform.png');
             this.load.image('star', 'assets/star.png');
             this.load.image('bomb', 'assets/bomb.png');
             this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+            this.load.image('key', 'assets/key.png');
+            this.load.image('door', 'assets/door.png');
+
         }
 
         function create() {
             //  A simple background for our game
-            this.add.image(400, 300, 'sky');
+            this.add.image(400, 300, 'background2');
 
             //  The platforms group contains the ground and the 2 ledges we can jump on
             platforms = this.physics.add.staticGroup();
@@ -65,13 +70,23 @@
             platforms.create(400, 567, 'ground').setScale(2).refreshBody();
 
             //  Now let's create some ledges
-            platforms.create(600, 400, 'ground');
-            platforms.create(50, 250, 'ground');
+            platforms.create(600, 432, 'ground');
             platforms.create(750, 220, 'ground');
-            platforms.create(400, 100, 'ground');
+
+
+            // this platfrom is where the key is
+            platforms.create(200, 250, 'ground');
+            key = this.physics.add.image(50, 228, 'key');
+
+            //this platform is where the door is
+            platforms.create(800, 100, 'ground');
+            door = this.physics.add.image(626, 53, 'door');
+
+
 
             // The player and its settings
             player = this.physics.add.sprite(100, 450, 'dude');
+
 
             //  Player physics properties. Give the little guy a slight bounce.
             player.setBounce(0.2);
@@ -124,9 +139,16 @@
             this.physics.add.collider(player, platforms);
             this.physics.add.collider(stars, platforms);
             this.physics.add.collider(bombs, platforms);
+            this.physics.add.collider(key, platforms);
+            this.physics.add.collider(door, platforms);
+            this.physics.add.collider(player, door);
+            this.physics.add.collider(player, key);
 
             //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
             this.physics.add.overlap(player, stars, collectStar, null, this);
+
+
+            this.physics.add.overlap(player, key, collectkey, null, this);
 
             this.physics.add.collider(player, bombs, hitBomb, null, this);
         }
@@ -157,6 +179,11 @@
             }
         }
 
+
+        ////
+        // Additional functions
+        ////
+
         function collectStar(player, star) {
             star.disableBody(true, true);
 
@@ -180,8 +207,21 @@
                 bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
                 bomb.allowGravity = false;
 
-            }
+            } // if
         }
+
+
+        function collectkey(player, key) {
+            key.disableBody(true, true);
+
+            console.log('collected key');
+
+            //  Add and update the score
+            score += 50;
+            scoreText.setText('Score: ' + score);
+        }
+
+
 
         function hitBomb(player, bomb) {
             this.physics.pause();
@@ -198,4 +238,3 @@
 </body>
 
 </html>
-

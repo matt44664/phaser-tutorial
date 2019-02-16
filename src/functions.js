@@ -1,13 +1,13 @@
-function collectStar(player, star) {
-    star.disableBody(true, true);
+function collectcoin(player, coin) {
+    coin.disableBody(true, true);
 
     //  Add and update the score
     score += 10;
     scoreText.setText('Score: ' + score);
 
-    if (stars.countActive(true) === 0) {
+    if (coins.countActive(true) === 0) {
         //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
+        coins.children.iterate(function (child) {
 
             child.enableBody(true, child.x, 0, true, true);
 
@@ -21,7 +21,7 @@ function collectStar(player, star) {
         bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
         bomb.allowGravity = false;
 
-    } // if
+    } 
 }
 
 

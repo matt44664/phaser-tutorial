@@ -19,7 +19,7 @@ var config = {
 var player;
 var key;
 var door;
-var stars;
+var coins;
 var bombs;
 var platforms;
 var cursors;
@@ -29,14 +29,18 @@ var scoreText;
 
 var game = new Phaser.Game(config);
 
+// game.scene.add('TitleScene');
+// game.scene.start('TitleScene');
+
 function preload() {
     this.load.image('background2', 'assets/background2.png');
     this.load.image('ground', 'assets/platform.png');
-    this.load.image('star', 'assets/star.png');
+    this.load.image('coin', 'assets/Bitcoin.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('key', 'assets/key.png');
     this.load.image('door', 'assets/door.png');
+
 
 }
 
@@ -58,11 +62,13 @@ function create() {
 
     // this platfrom is where the key is
     platforms.create(200, 250, 'ground');
-    key = this.physics.add.image(50, 228, 'key');
+    key = this.physics.add.image(50, 0, 'key');
+    key.setCollideWorldBounds(true);
 
     //this platform is where the door is
     platforms.create(800, 100, 'ground');
     door = this.physics.add.image(626, 53, 'door');
+    door.setCollideWorldBounds(true);
 
 
 
@@ -99,13 +105,13 @@ function create() {
     cursors = this.input.keyboard.createCursorKeys();
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    stars = this.physics.add.group({
-        key: 'star',
+    coins = this.physics.add.group({
+        key: 'coin',
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
 
-    stars.children.iterate(function (child) {
+    coins.children.iterate(function (child) {
 
         //  Give each star a slightly different bounce
         child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
@@ -119,15 +125,15 @@ function create() {
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
+    this.physics.add.collider(coins, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(key, platforms);
     this.physics.add.collider(door, platforms);
     this.physics.add.collider(player, door);
-    this.physics.add.collider(player, key);
+    this.physics.add.collider(player, key); 
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
+    this.physics.add.overlap(player, coins, collectcoin, null, this);
 
 
     this.physics.add.overlap(player, key, collectkey, null, this);

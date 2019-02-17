@@ -17,6 +17,7 @@ var config = {
 };
 
 var player;
+var calculator;
 var key;
 var door;
 var coins;
@@ -26,9 +27,15 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var TitleScene;
+
+    //for title screen
+// import TitleScene from './scenes/TitleScene';
+// let TitleScene = new TitleScene();
 
 var game = new Phaser.Game(config);
 
+    //for title screen
 // game.scene.add('TitleScene');
 // game.scene.start('TitleScene');
 
@@ -40,22 +47,23 @@ function preload() {
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('key', 'assets/key.png');
     this.load.image('door', 'assets/door.png');
-
-
+    this.load.image('calculator', 'assets/calculator.png');
 }
 
 function create() {
     //  A simple background for our game
     this.add.image(400, 300, 'background2');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
+    //  this gives the plarforms physics 
     platforms = this.physics.add.staticGroup();
 
-    //  Here we create the ground.
+    //  this creates the floor. The 'calculator' is along here
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
     platforms.create(400, 567, 'ground').setScale(2).refreshBody();
+    calculator = this.physics.add.image(800, 520, 'calculator');
+    calculator.setCollideWorldBounds(true);
 
-    //  Now let's create some ledges
+    //  creates some ledges
     platforms.create(600, 432, 'ground');
     platforms.create(750, 220, 'ground');
 
@@ -63,7 +71,11 @@ function create() {
     // this platfrom is where the key is
     platforms.create(200, 250, 'ground');
     key = this.physics.add.image(50, 0, 'key');
+    // this restricts the key from going out of the world
     key.setCollideWorldBounds(true);
+
+    // allow the key to bounce when it hits the ground
+    key.setBounce(1);
 
     //this platform is where the door is
     platforms.create(800, 100, 'ground');
@@ -96,7 +108,7 @@ function create() {
 
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 9 }),
         frameRate: 10,
         repeat: -1
     });
@@ -104,7 +116,7 @@ function create() {
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
 
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
+    //  Some coins to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     coins = this.physics.add.group({
         key: 'coin',
         repeat: 11,
@@ -123,7 +135,7 @@ function create() {
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
-    //  Collide the player and the stars with the platforms
+    //  Collide the player and all assets to make them solid
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(coins, platforms);
     this.physics.add.collider(bombs, platforms);
@@ -131,12 +143,16 @@ function create() {
     this.physics.add.collider(door, platforms);
     this.physics.add.collider(player, door);
     this.physics.add.collider(player, key); 
+    this.physics.add.collider(player, calculator);
+    this.physics.add.collider(calculator, platforms); 
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, coins, collectcoin, null, this);
 
 
     this.physics.add.overlap(player, key, collectkey, null, this);
+
+    this.physics.add.overlap(player, calculator, collectcalculator, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 }

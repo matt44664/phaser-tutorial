@@ -35,6 +35,17 @@ function collectkey(player, key) {
     scoreText.setText('Score: ' + score);
 }
 
+function collectcalculator(player, calculator) {
+    calculator.disableBody(true, true);
+
+    console.log('collected calculator');
+
+    //  Add and update the score
+    score += 100;
+    scoreText.setText('Score: ' + score);
+}
+
+
 
 
 function hitBomb(player, bomb) {
@@ -43,6 +54,7 @@ function hitBomb(player, bomb) {
     player.setTint(0xff0000);
 
     player.anims.play('turn');
+
 
     gameOver = true;
 }

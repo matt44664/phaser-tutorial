@@ -141,8 +141,6 @@ function create() {
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(key, platforms);
     this.physics.add.collider(door, platforms);
-    this.physics.add.collider(player, door);
-    this.physics.add.collider(player, key); 
     this.physics.add.collider(player, calculator);
     this.physics.add.collider(calculator, platforms); 
 

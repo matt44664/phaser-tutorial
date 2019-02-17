@@ -141,18 +141,14 @@ function create() {
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(key, platforms);
     this.physics.add.collider(door, platforms);
-    this.physics.add.collider(player, calculator);
     this.physics.add.collider(calculator, platforms); 
-
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, coins, collectcoin, null, this);
-
-
-    this.physics.add.overlap(player, key, collectkey, null, this);
-
-    this.physics.add.overlap(player, calculator, collectcalculator, null, this);
-
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+
+    //  Checks to see if the player overlaps with any of these assets and call the associated function
+    this.physics.add.overlap(player, coins, collectcoin, null, this);
+    this.physics.add.overlap(player, key, collectkey, null, this);
+    this.physics.add.overlap(player, calculator, collectcalculator, null, this);
 }
 
 function update() {
@@ -180,9 +176,3 @@ function update() {
         player.setVelocityY(-330);
     }
 }
-
-
-////
-// Additional functions
-////
-

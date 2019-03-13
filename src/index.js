@@ -17,10 +17,8 @@ var config = {
 };
 
 var player;
-var portal;
 var calculator;
 var key;
-var door;
 var coins;
 var bombs;
 var platforms;
@@ -28,18 +26,11 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
-var TitleScene;
 
-
-    //for title screen
-// import TitleScene from './scenes/TitleScene';
-// let TitleScene = new TitleScene();
 
 var game = new Phaser.Game(config);
 
-    //for title screen
-// game.scene.add('TitleScene');
-// game.scene.start('TitleScene');
+
 
 function preload() {
     this.load.image('background2', 'assets/background2.png');
@@ -48,14 +39,11 @@ function preload() {
     this.load.image('bomb', 'assets/bomb.png');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('key', 'assets/key.png');
-    this.load.image('door', 'assets/door.png');
     this.load.image('calculator', 'assets/calculator.png');
-    this.load.image('portal', 'assets/portal.png');
-    
 }
 
 function create() {
-    //  A simple background for our game
+    //  A background for my game
     this.add.image(400, 300, 'background2');
 
     //  this gives the plarforms physics 
@@ -70,8 +58,7 @@ function create() {
     //  creates some ledges
     platforms.create(600, 432, 'ground');
     platforms.create(750, 220, 'ground');
-
-    portal = this.physics.add.image(740, 240, 'portal');
+    platforms.create(800, 88, 'ground');
 
     // this platfrom is where the key is
     platforms.create(200, 250, 'ground');
@@ -81,11 +68,6 @@ function create() {
 
     // allow the key to bounce when it hits the ground
     key.setBounce(0.4);
-
-    //this platform is where the door is
-    platforms.create(800, 88, 'ground');
-    door = this.physics.add.image(626, 0, 'door');
-    door.setCollideWorldBounds(true);
 
 
 
@@ -145,8 +127,6 @@ function create() {
     this.physics.add.collider(coins, platforms);
     this.physics.add.collider(bombs, platforms);
     this.physics.add.collider(key, platforms);
-    this.physics.add.collider(door, platforms);
-    this.physics.add.collider(portal, platforms);
     this.physics.add.collider(calculator, platforms); 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
@@ -181,5 +161,6 @@ function update() {
     if (cursors.up.isDown && player.body.touching.down) {
         player.setVelocityY(-330);
     }
+
 
 }
